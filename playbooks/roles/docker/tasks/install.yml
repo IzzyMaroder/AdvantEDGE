@@ -14,6 +14,7 @@
     update_cache: yes
   with_items:
     - apt-transport-https
+    - acl
     - ca-certificates
     - curl
     - gnupg
@@ -23,15 +24,31 @@
     - virtualenv
     - python3-setuptools
 
-- name: Add Docker APT GPG key
-  apt_key:
+- name: Download Docker GPG key
+  get_url:
     url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
+    dest: /tmp/docker.gpg
+    mode: '0644'
 
-- name: Add Docker APT repository
-  apt_repository:
-    repo: deb https://download.docker.com/linux/ubuntu {{ ubuntu_release }} stable
-    state: present
+- name: Convert Docker GPG key to keyring format
+  command: gpg --dearmor --yes -o /usr/share/keyrings/docker-archive-keyring.gpg /tmp/docker.gpg
+  args:
+    creates: /usr/share/keyrings/docker-archive-keyring.gpg
+  become: yes
+
+- name: Add Docker APT repository with signed key
+  copy:
+    content: |
+      deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu {{ ubuntu_release }} stable
+    dest: /etc/apt/sources.list.d/docker.list
+    mode: '0644'
+  become: yes
+
+- name: Remove temporary Docker GPG key
+  file:
+    path: /tmp/docker.gpg
+    state: absent
+  become: yes
 
 - name: Install docker engine
   apt:
@@ -39,10 +56,10 @@
     name: "{{ item }}"
     state: present
   with_items:
-    - docker-ce={{ docker_version }}*
-    - docker-ce-cli={{ docker_version }}*
+    - docker-ce={{ docker_version }}~3-0~ubuntu-{{ ubuntu_release }}
+    - docker-ce-cli={{ docker_version }}~3-0~ubuntu-{{ ubuntu_release }}
     - containerd.io={{ containerd_version }}
-    - docker-compose-plugin
+    - docker-compose-plugin={{docker_compose_version}}~ubuntu-{{ ubuntu_release }}
 
 - name: Hold docker version
   dpkg_selections:
