@@ -1,5 +1,5 @@
 ---
-- name: Assert OS is Ubuntu 18.04
+- name: Assert OS is Ubuntu 22.04
   assert:
     that:
       - ansible_distribution == "{{ ubuntu_dist }}"
