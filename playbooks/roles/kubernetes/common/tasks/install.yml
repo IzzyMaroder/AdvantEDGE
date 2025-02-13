@@ -15,17 +15,23 @@
   with_items:
     - apt-transport-https
     - curl
+    - gpg
+    - ca-certificates
 
 - name: Add Kubernetes APT GPG key
   apt_key:
     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
     state: present
 
-- name: Add Kubernetes APT repository
+- name: Get Kubernetes package key
+  shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  args:
+    creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+- name: Install Kubernetes repository
   apt_repository:
-    repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
-    state: present
-    filename: 'kubernetes'
+    filename: kubernetes
+    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.27/deb/ /"
 
 - name: Install kubernetes packages
   apt:
