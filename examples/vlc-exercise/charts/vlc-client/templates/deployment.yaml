@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "meep.fullname" . }}
+  labels:
+    release: {{ .Release.Name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "meep.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "meep.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: vlc-client
+          image: {{ .Values.deployment.image.name }}
+          imagePullPolicy: {{ .Values.deployment.image.pullpolicy }}
+          command: ["/bin/bash", "-c", "sleep infinity"]

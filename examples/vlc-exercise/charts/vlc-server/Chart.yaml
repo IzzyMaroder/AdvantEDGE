@@ -1,0 +1,5 @@
+apiVersion: v2
+appVersion: "1.0.0"
+description: Test VLC with Helm chart for Kubernetes
+name: demo-vlc-server
+version: 1.0.0

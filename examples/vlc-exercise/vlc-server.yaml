@@ -1,0 +1,43 @@
+---
+# Source: demo-vlc-server/templates/service.yaml
+kind: Service
+apiVersion: v1
+metadata:
+  name: vlc-server-service
+spec:
+  type: ClusterIP
+  selector:
+    app: demo-vlc-server
+    release: vlc-exercise
+  ports:
+  - name: rtsp
+    port: 31116
+    targetPort: 31116
+    protocol: TCP
+---
+# Source: demo-vlc-server/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vlc-exercise-demo-vlc-server
+  labels:
+    release: vlc-exercise
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-vlc-server
+      release: vlc-exercise
+  template:
+    metadata:
+      labels:
+        app: demo-vlc-server
+        release: vlc-exercise
+    spec:
+      containers:
+        - name: vlc-server
+          image: meep-docker-registry:30001/vlc-server
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 31116
+          command: ["/bin/bash", "-c", "sleep infinity"]

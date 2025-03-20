@@ -1,0 +1,5 @@
+apiVersion: v2
+appVersion: "1.0.0"
+description: Meep Test VLC Helm chart for Kubernetes
+name: demo-vlc-client
+version: 1.0.0

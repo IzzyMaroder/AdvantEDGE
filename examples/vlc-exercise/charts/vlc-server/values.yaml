@@ -1,0 +1,17 @@
+# Default values for generic values.yaml
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+deployment:
+  image:
+    name: meep-docker-registry:30001/vlc-server
+    pullpolicy: Always
+
+service:
+  name: "vlc-server-service"
+  portrtsp: 31116
+  protocol: TCP
+  portrtp: 5004
+  portrtcp: 5005
+  protocoludp: UDP
+  group: vlc-server
