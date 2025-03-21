@@ -1,0 +1,220 @@
+version: 1.9.2
+name: vlc-exercise-1
+deployment:
+    netChar:
+        latency: 50
+        latencyVariation: 5
+        latencyDistribution: Normal
+        throughputDl: 1000
+        throughputUl: 1000
+    connectivity:
+        model: OPEN
+    d2d:
+        d2dMaxDistance: 100
+    domains:
+        -
+            id: PUBLIC
+            name: PUBLIC
+            type: PUBLIC
+            netChar:
+                latency: 6
+                latencyVariation: 2
+                throughputDl: 1000
+                throughputUl: 1000
+            zones:
+                -
+                    id: PUBLIC-COMMON
+                    name: PUBLIC-COMMON
+                    type: COMMON
+                    netChar:
+                        latency: 5
+                        latencyVariation: 1
+                        throughputDl: 1000
+                        throughputUl: 1000
+                    networkLocations:
+                        -
+                            id: PUBLIC-COMMON-DEFAULT
+                            name: PUBLIC-COMMON-DEFAULT
+                            type: DEFAULT
+                            netChar:
+                                latency: 1
+                                latencyVariation: 1
+                                throughputDl: 1000
+                                throughputUl: 1000
+                            physicalLocations:
+                                -
+                                    id: 8e7d5607-edc5-4072-a716-e8cfda64a4b6
+                                    name: cloud1
+                                    type: DC
+                                    connected: true
+                                    dataNetwork:
+                                        dnn: internet
+                                    processes:
+                                        -
+                                            id: f72e1e9b-db5c-4a38-8a55-805719e72276
+                                            name: cloud-app1
+                                            type: CLOUD-APP
+                                            image: 'meep-docker-registry:30001/netcat-server'
+                                            netChar:
+                                                throughputDl: 1000
+                                                throughputUl: 1000
+                                    netChar:
+                                        throughputDl: 1000
+                                        throughputUl: 1000
+        -
+            id: 9b18f0ae-4982-4e46-8fce-a7ff6516479d
+            name: operator1
+            type: OPERATOR
+            netChar:
+                latency: 15
+                latencyVariation: 3
+                throughputDl: 1000
+                throughputUl: 1000
+            zones:
+                -
+                    id: operator1-COMMON
+                    name: operator1-COMMON
+                    type: COMMON
+                    netChar:
+                        latency: 5
+                        latencyVariation: 1
+                        throughputDl: 1000
+                        throughputUl: 1000
+                    networkLocations:
+                        -
+                            id: operator1-COMMON-DEFAULT
+                            name: operator1-COMMON-DEFAULT
+                            type: DEFAULT
+                            netChar:
+                                latency: 1
+                                latencyVariation: 1
+                                throughputDl: 1000
+                                throughputUl: 1000
+                -
+                    id: c75256d8-e4cd-4abf-bf6d-b4b3a1385b06
+                    name: zone1
+                    type: ZONE
+                    netChar:
+                        latency: 5
+                        latencyVariation: 1
+                        throughputDl: 1000
+                        throughputUl: 1000
+                    networkLocations:
+                        -
+                            id: zone1-DEFAULT
+                            name: zone1-DEFAULT
+                            type: DEFAULT
+                            netChar:
+                                latency: 1
+                                latencyVariation: 1
+                                throughputDl: 1000
+                                throughputUl: 1000
+                            physicalLocations:
+                                -
+                                    id: e8bd434f-1ef2-4d32-b185-98f0bcc1e090
+                                    name: zone1-edge1
+                                    type: EDGE
+                                    connected: true
+                                    processes:
+                                        -
+                                            id: 87cf69af-6b3e-449c-8cc0-4fecd6d324c6
+                                            name: zone1-edge1-svc
+                                            type: EDGE-APP
+                                            image: 'meep-docker-registry:30001/netcat-server'
+                                            commandArguments: '-c, sleep infinity'
+                                            commandExe: /bin/bash
+                                            serviceConfig:
+                                                name: zone1-edge1-svc
+                                                meSvcName: ncsvc
+                                                ports:
+                                                    -
+                                                        protocol: TCP
+                                                        port: 9090
+                                            netChar:
+                                                throughputDl: 1000
+                                                throughputUl: 1000
+                                    netChar:
+                                        latencyDistribution: Normal
+                                        throughputDl: 1000
+                                        throughputUl: 1000
+                        -
+                            id: 6b477dd3-eb67-49f9-b1d2-2bfae9376a33
+                            name: zone1-poa1
+                            type: POA
+                            netChar:
+                                latency: 1
+                                latencyVariation: 1
+                                throughputDl: 1000
+                                throughputUl: 1000
+                            physicalLocations:
+                                -
+                                    id: caaa2a73-ba13-4167-8d26-aa00ef864fe5
+                                    name: ue1
+                                    type: UE
+                                    connected: true
+                                    wireless: true
+                                    dataNetwork: {}
+                                    processes:
+                                        -
+                                            id: f5499eae-0978-4f08-a15e-7222fa2f2ddc
+                                            name: cloud-app
+                                            type: UE-APP
+                                            isExternal: true
+                                            externalConfig:
+                                                ingressServiceMap:
+                                                    -
+                                                        name: ncsvc
+                                                        port: 9090
+                                                        externalPort: 31120
+                                                        protocol: TCP
+                                                    -
+                                                        name: cloudsvc
+                                                        port: 9090
+                                                        externalPort: 31121
+                                                        protocol: TCP
+                                            netChar:
+                                                throughputDl: 1000
+                                                throughputUl: 1000
+                                    netChar:
+                                        throughputDl: 1000
+                                        throughputUl: 1000
+                -
+                    id: 2776c0b0-84c5-4b01-907a-b7d03bf07b24
+                    name: zone2
+                    type: ZONE
+                    netChar:
+                        latency: 5
+                        latencyVariation: 1
+                        throughputDl: 1000
+                        throughputUl: 1000
+                        packetLoss: 0
+                    networkLocations:
+                        -
+                            id: zone2-DEFAULT
+                            name: zone2-DEFAULT
+                            type: DEFAULT
+                            netChar:
+                                latency: 1
+                                latencyVariation: 1
+                                throughputDl: 1000
+                                throughputUl: 1000
+                                packetLoss: 0
+                            geoData: null
+                            physicalLocations: []
+                        -
+                            id: 3e1a6786-bfb1-4b90-b5d0-8508e4a2f44b
+                            name: zone2-poa2
+                            type: POA
+                            netChar:
+                                latency: 1
+                                latencyVariation: 1
+                                throughputDl: 1000
+                                throughputUl: 1000
+                                packetLoss: 0
+                            geoData:
+                                location: null
+                                radius: null
+                            physicalLocations: []
+                            label: zone2-poa2
+                    meta:
+                        display.map.color: ""
