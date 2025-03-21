@@ -9,9 +9,6 @@ deployment:
 
 service:
   name: "vlc-server-service"
-  portrtsp: 31116
+  portrtsp: 9090
   protocol: TCP
-  portrtp: 5004
-  portrtcp: 5005
-  protocoludp: UDP
   group: vlc-server
