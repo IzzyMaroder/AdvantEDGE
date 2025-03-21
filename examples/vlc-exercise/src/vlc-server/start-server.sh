@@ -1,3 +1,3 @@
 #!/bin/bash
 
-vlc -vvv video10m.mp4 --sout '#transcode{vcodec=h264,acodec=mpga,ab=128,channels=2,samplerate=44100,scodec=none}:duplicate{dst=http{mux=ffmpeg{mux=flv},dst=:31116/}' --no-sout-all --sout-keep
+ffmpeg -re -i video10m.mp4 -c:v h264 -b:v 300k -preset ultrafast -c:a aac -b:a 128k -ac 2 -ar 44100 -f flv tcp://0.0.0.0:9090?listen

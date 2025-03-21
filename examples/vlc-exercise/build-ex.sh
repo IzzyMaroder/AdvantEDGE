@@ -5,7 +5,6 @@ SCRIPT=$(readlink -f "$0")
 BASEDIR=$(dirname "$SCRIPT")
 
 SERVERBIN=bin/vlc-server
-CLIENTBIN=bin/vlc-client
 
 # Retrieve workdir
 # WORKDIR=`grep workdir $HOME/.meepctl.yaml | sed 's/^.*workdir:[ \t]*//'`
@@ -18,12 +17,8 @@ CLIENTBIN=bin/vlc-client
 
 
 mkdir -p $SERVERBIN
-mkdir -p $CLIENTBIN
 
 chmod +x $BASEDIR/dockerize.sh
 
 chmod +x $BASEDIR/src/vlc-server/build.sh
 $BASEDIR/src/vlc-server/build.sh $SERVERBIN
-
-chmod +x $BASEDIR/src/vlc-client/build.sh
-$BASEDIR/src/vlc-client/build.sh $CLIENTBIN
