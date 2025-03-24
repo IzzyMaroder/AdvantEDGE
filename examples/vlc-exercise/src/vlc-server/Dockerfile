@@ -1,6 +1,6 @@
 FROM debian
 
-RUN apt-get update && apt-get install -y ffmpeg net-tools
+RUN apt-get update && apt-get install -y ffmpeg net-tools procps
 
 # EXPOSE 31116
 
@@ -11,4 +11,4 @@ COPY start-server.sh ./start-server.sh
 RUN chmod +x ./start-server.sh
 
 
-CMD ["/bin/bash", "./start-server.sh"]
+ENTRYPOINT ["/bin/bash", "./start-server.sh"]
