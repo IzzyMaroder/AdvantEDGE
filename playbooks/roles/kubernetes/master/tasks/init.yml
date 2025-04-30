@@ -14,6 +14,12 @@
     content: "{{ containerd_config.stdout }}"
     dest: /etc/containerd/config.toml
 
+- name: Ensure SystemdCgroup is set to true in containerd config
+  replace:
+    path: /etc/containerd/config.toml
+    regexp: '^(\s*)SystemdCgroup\s*=\s*false'
+    replace: '\1SystemdCgroup = true'
+
 - name: Restart Containerd service
   systemd:
     name: containerd
@@ -27,7 +33,7 @@
 
 - name: Init Kubernetes cluster
   when: reset_cluster is succeeded
-  shell: kubeadm init --cri-socket unix:///run/containerd/containerd.sock
+  shell: kubeadm init --kubernetes-version 1.27.16 --cri-socket unix:///run/containerd/containerd.sock
   register: init_cluster
 
 - name: Create Kubernetes config directory
@@ -47,6 +53,8 @@
 
 - name: "Enable scheduling on control plane node"
   command: kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+  become: true
+  become_user: "{{ansible_user}}"
 
 - name: Enable and check kubelet service
   systemd:
@@ -59,6 +67,7 @@
   copy:
     src: /etc/kubernetes/pki/ca.crt
     dest: /usr/local/share/ca-certificates/kubernetes-ca.crt
+    remote_src: true
 
 - name: Update certificate index
   shell: /usr/sbin/update-ca-certificates
