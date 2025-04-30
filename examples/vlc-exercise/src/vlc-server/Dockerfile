@@ -8,11 +8,8 @@ COPY video10m.mp4 ./video10m.mp4
 
 COPY streaming.html ./streaming.html
 
-COPY streaming.js ./streaming.js
-
 COPY start-server.sh ./start-server.sh
 
 RUN chmod +x ./start-server.sh
-
 
 ENTRYPOINT ["/bin/bash", "./start-server.sh"]
