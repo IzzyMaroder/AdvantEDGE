@@ -1,6 +1,6 @@
 FROM debian
 
-RUN apt-get update && apt-get install -y ffmpeg net-tools procps nodejs npm
+RUN apt-get update && apt-get install -y ffmpeg net-tools procps
 
 # EXPOSE 31116
 
@@ -11,8 +11,6 @@ COPY streaming.html ./streaming.html
 COPY streaming.js ./streaming.js
 
 COPY start-server.sh ./start-server.sh
-
-RUN npm init -y && npm cache clean --force && npm install axios
 
 RUN chmod +x ./start-server.sh
 
