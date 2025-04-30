@@ -12,7 +12,7 @@ COPY streaming.js ./streaming.js
 
 COPY start-server.sh ./start-server.sh
 
-RUN npm install axios
+RUN npm init -y && npm install axios
 
 RUN chmod +x ./start-server.sh
 

@@ -13,4 +13,4 @@ let body = {
   }
 }
 
-axios.post('http://192.168.0.217/test3/location/v2/subscriptions/userTracking');
+axios.post('http://192.168.0.217/test3/location/v2/subscriptions/userTracking', body);
