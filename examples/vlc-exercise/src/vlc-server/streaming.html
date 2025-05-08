@@ -21,8 +21,9 @@
   <div id="zone-display">Current Zone: loading...</div>
 
   <script>
+    let ip = "CHANGE-WITH-YOUR-IP"
     const video = document.getElementById('video');
-    const videoSrc = 'http://192.168.0.217:31120/playlist.m3u8';
+    const videoSrc = `http://${ip}:31120/playlist.m3u8`;
     const hls = new Hls();
     hls.loadSource(videoSrc);
     hls.attachMedia(video);
@@ -32,18 +33,14 @@
 
     async function fetchZone() {
       try {
-        const response = await fetch('http://192.168.0.217/streaming-app/location/v2/queries/users?address=ue1');
-        if (!response.ok) throw new Error('Errore nella richiesta');
+        const response = await fetch(`http://${ip}/streaming-app/location/v2/queries/users?address=ue1`);
+        if (!response.ok) throw new Error('Request Error');
         const data = await response.json();
         const zone = data?.userList?.user?.[0]?.zoneId;
 
         if (zone && zone !== currentZone) {
-          if (currentZone !== null) {
-            location.reload();
-          } else {
             currentZone = zone;
             zoneDisplay.textContent = 'Current Zone: ' + currentZone;
-          }
         }
       } catch (error) {
         console.error('Error:', error);
